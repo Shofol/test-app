@@ -1,0 +1,33 @@
+<div *ngIf="result$ | async as result" class="min-h-screen">
+  <div class="pt-10">
+    <h3 class="text-5xl text-center font-bold">{{ result.post.title }}</h3>
+    <p class="text-lg py-10 text-justify">{{ result.post.body }}</p>
+  </div>
+  <div class="flex justify-end mb-4">
+    <a
+      class="bg-slate-600 text-white px-6 py-2 rounded-sm hover:bg-slate-500"
+      [routerLink]="['/dashboard/posts/', result.post.id, 'addComment']"
+      >Add Comment</a
+    >
+  </div>
+  <div class="bg-slate-100 py-10 px-16 rounded-sm">
+    <h2 class="text-2xl font-bold mb-4">Comments:</h2>
+    <div
+      class="flex flex-col mb-4"
+      *ngFor="let comment of newComments; index as i"
+    >
+      <span class="text-xl">{{ comment.name }}</span>
+      <span class="text-sm">{{ comment.email }}</span>
+      <span>{{ comment.body }}</span>
+    </div>
+    <div
+      class="flex flex-col mb-4"
+      *ngFor="let comment of result.comments; index as i"
+    >
+      <span class="text-xl">{{ comment.name }}</span>
+      <span class="text-sm">{{ comment.email }}</span>
+      <span>{{ comment.body }}</span>
+    </div>
+  </div>
+  <!-- </div> -->
+</div>
