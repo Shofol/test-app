@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from '../dashboard.service';
 import { Comment } from '../dashboard.service';
@@ -19,9 +19,9 @@ export class AddCommentComponent {
   ) {}
 
   commentForm = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl(''),
-    body: new FormControl(''),
+    name: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required]),
+    body: new FormControl('', [Validators.required]),
   });
 
   ngOnInit() {
@@ -31,25 +31,30 @@ export class AddCommentComponent {
   }
 
   addComment() {
-    let newComment: Comment = {
-      postId: '',
-      id: '',
-      name: '',
-      email: '',
-      body: '',
-    };
-    newComment.postId = this.postId;
-    newComment.name = this.commentForm.controls.name.value || '';
-    newComment.email = this.commentForm.controls.email.value || '';
-    newComment.body = this.commentForm.controls.body.value || '';
+    this.commentForm.markAsDirty();
+    this.commentForm.markAllAsTouched();
 
-    this.dashboardService
-      .addComment(this.postId, newComment)
-      .subscribe((res: any) => {
-        this.dashboardService.addNewComment(res).subscribe((result) => {
-          console.log(result);
-          this.router.navigate([`/dashboard/posts/${this.postId}`]);
+    if (this.commentForm.valid) {
+      let newComment: Comment = {
+        postId: '',
+        id: '',
+        name: '',
+        email: '',
+        body: '',
+      };
+      newComment.postId = this.postId;
+      newComment.name = this.commentForm.controls.name.value || '';
+      newComment.email = this.commentForm.controls.email.value || '';
+      newComment.body = this.commentForm.controls.body.value || '';
+
+      this.dashboardService
+        .addComment(this.postId, newComment)
+        .subscribe((res: any) => {
+          this.dashboardService.addNewComment(res).subscribe((result) => {
+            console.log(result);
+            this.router.navigate([`/dashboard/posts/${this.postId}`]);
+          });
         });
-      });
+    }
   }
 }

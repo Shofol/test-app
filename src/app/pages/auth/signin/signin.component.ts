@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/in-memory-data.service';
@@ -11,8 +11,8 @@ import { User } from 'src/app/in-memory-data.service';
 })
 export class SigninComponent implements OnInit {
   signinForm = new FormGroup({
-    name: new FormControl(''),
-    password: new FormControl(''),
+    name: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required]),
   });
 
   constructor(
@@ -43,30 +43,35 @@ export class SigninComponent implements OnInit {
   }
 
   login() {
-    const filterdUsers = this.users.filter((user: User) => {
-      if (
-        user.name === this.signinForm.controls.name.value &&
-        user.password === this.signinForm.controls.password.value
-      ) {
-        return true;
+    this.signinForm.markAsDirty();
+    this.signinForm.markAllAsTouched();
+
+    if (this.signinForm.valid) {
+      const filterdUsers = this.users.filter((user: User) => {
+        if (
+          user.name === this.signinForm.controls.name.value &&
+          user.password === this.signinForm.controls.password.value
+        ) {
+          return true;
+        }
+        return false;
+      });
+      if (filterdUsers.length > 0) {
+        localStorage.setItem(
+          'userLoggedIn',
+          this.signinForm.controls.name.value || ''
+        );
+        if (this.isSource) {
+          this.router;
+        }
+        if (this.isSource) {
+          this.router.navigate([this.source]);
+        }
+        this.router.navigate(['/dashboard']);
+        // alert('success');
+      } else {
+        alert('No user found');
       }
-      return false;
-    });
-    if (filterdUsers.length > 0) {
-      localStorage.setItem(
-        'userLoggedIn',
-        this.signinForm.controls.name.value || ''
-      );
-      if (this.isSource) {
-        this.router;
-      }
-      if (this.isSource) {
-        this.router.navigate([this.source]);
-      }
-      this.router.navigate(['/dashboard']);
-      // alert('success');
-    } else {
-      alert('No user found');
     }
   }
 }

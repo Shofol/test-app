@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { User } from 'src/app/in-memory-data.service';
 
@@ -12,19 +12,30 @@ export class SignupComponent {
   constructor(private authService: AuthService) {}
 
   signupForm = new FormGroup({
-    name: new FormControl(''),
-    password: new FormControl(''),
-    confirmPassword: new FormControl(''),
+    name: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required]),
+    confirmPassword: new FormControl('', [Validators.required]),
   });
 
   addNewUser() {
-    let newUser: User = { id: '', name: '', password: '' };
+    if (
+      this.signupForm.controls.password.value !==
+      this.signupForm.controls.confirmPassword.value
+    ) {
+      this.signupForm.controls.confirmPassword.setErrors({ mismatch: true });
+    }
+    this.signupForm.markAsDirty();
+    this.signupForm.markAllAsTouched();
 
-    newUser.id = '1';
-    newUser.name = this.signupForm.controls.name.value || '';
-    newUser.password = this.signupForm.controls.password.value || '';
-    this.authService.addUser(newUser).subscribe((res) => {
-      alert('User Created');
-    });
+    if (this.signupForm.valid) {
+      let newUser: User = { id: '', name: '', password: '' };
+
+      newUser.id = '1';
+      newUser.name = this.signupForm.controls.name.value || '';
+      newUser.password = this.signupForm.controls.password.value || '';
+      this.authService.addUser(newUser).subscribe((res) => {
+        alert('User Created');
+      });
+    }
   }
 }

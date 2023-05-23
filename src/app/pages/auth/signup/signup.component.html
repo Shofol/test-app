@@ -30,6 +30,13 @@
           class="border border-gray-200 mb-4 p-2"
         />
 
+        <div
+          class="mb-4 text-red-600"
+          *ngIf="signupForm.controls.name.touched &&  signupForm.controls.name.errors?.['required']"
+        >
+          Name is required.
+        </div>
+
         <label for="password">Password: </label>
         <input
           id="password"
@@ -37,6 +44,12 @@
           formControlName="password"
           class="border border-gray-200 mb-4 p-2"
         />
+        <div
+          class="mb-4 text-red-600"
+          *ngIf="signupForm.controls.password.touched &&  signupForm.controls.password.errors?.['required']"
+        >
+          Password is required.
+        </div>
 
         <label for="confirmPassword">Confirm password: </label>
         <input
@@ -45,6 +58,19 @@
           formControlName="confirmPassword"
           class="border border-gray-200 mb-4 p-2"
         />
+        <div
+          class="mb-4 text-red-600"
+          *ngIf="signupForm.controls.confirmPassword.touched &&  signupForm.controls.confirmPassword.errors?.['required']"
+        >
+          Confirm password is required.
+        </div>
+
+        <div
+          class="mb-4 text-red-600"
+          *ngIf="signupForm.controls.confirmPassword.touched &&  signupForm.controls.confirmPassword.errors?.['mismatch']"
+        >
+          Confirm password doesn't match with password.
+        </div>
 
         <button
           class="bg-slate-600 text-white py-2 roundend-sm mt-4"
